@@ -10,8 +10,8 @@ function createWindow() {
   const windowBounds = store.get('windowBounds', { 
     x: 100, 
     y: 100, 
-    width: 320, 
-    height: 600 
+    width: 240, 
+    height: 340 
   });
 
   mainWindow = new BrowserWindow({
@@ -19,10 +19,14 @@ function createWindow() {
     y: windowBounds.y,
     width: windowBounds.width,
     height: windowBounds.height,
+    minWidth: 220,
+    minHeight: 300,
+    maxWidth: 600,
+    maxHeight: 1000,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    resizable: false,
+    resizable: true,
     skipTaskbar: false,
     webPreferences: {
       nodeIntegration: false,
@@ -33,8 +37,13 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
-  // Save window position when moved
+  // Save window position and size when moved or resized
   mainWindow.on('moved', () => {
+    const bounds = mainWindow.getBounds();
+    store.set('windowBounds', bounds);
+  });
+
+  mainWindow.on('resized', () => {
     const bounds = mainWindow.getBounds();
     store.set('windowBounds', bounds);
   });
@@ -59,6 +68,15 @@ ipcMain.handle('get-tasks', () => {
 
 ipcMain.handle('save-tasks', (event, tasks) => {
   store.set('tasks', tasks);
+  return true;
+});
+
+ipcMain.handle('get-theme', () => {
+  return store.get('theme', 'mischka');
+});
+
+ipcMain.handle('save-theme', (event, theme) => {
+  store.set('theme', theme);
   return true;
 });
 

@@ -1,9 +1,6 @@
-// ============================================
-// FILE: renderer.js
-// ============================================
-
 let tasks = [];
 let isMinimized = false;
+let currentTheme = 'mischka';
 
 const widget = document.getElementById('widget');
 const taskInput = document.getElementById('taskInput');
@@ -12,11 +9,36 @@ const taskList = document.getElementById('taskList');
 const taskCounter = document.getElementById('taskCounter');
 const minimizeBtn = document.getElementById('minimizeBtn');
 const minimizedText = document.getElementById('minimizedText');
+const settingsBtn = document.getElementById('settingsBtn');
+const themeSelector = document.getElementById('themeSelector');
 
-// Load tasks from storage
+// Load tasks and theme from storage
 async function loadTasks() {
   tasks = await window.electron.getTasks();
   renderTasks();
+}
+
+async function loadTheme() {
+  currentTheme = await window.electron.getTheme();
+  applyTheme(currentTheme);
+}
+
+// Apply theme
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.body.setAttribute('data-theme', theme);
+  
+  // Update selected state
+  document.querySelectorAll('.theme-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.theme === theme);
+  });
+}
+
+// Change theme
+async function changeTheme(theme) {
+  await window.electron.saveTheme(theme);
+  applyTheme(theme);
+  themeSelector.classList.remove('active');
 }
 
 // Save tasks to storage
@@ -108,9 +130,29 @@ widget.addEventListener('click', () => {
   if (isMinimized) toggleMinimize();
 });
 
+// Theme selector
+settingsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  themeSelector.classList.toggle('active');
+});
+
+document.addEventListener('click', (e) => {
+  if (!themeSelector.contains(e.target) && !settingsBtn.contains(e.target)) {
+    themeSelector.classList.remove('active');
+  }
+});
+
+document.querySelectorAll('.theme-option').forEach(option => {
+  option.addEventListener('click', (e) => {
+    e.stopPropagation();
+    changeTheme(option.dataset.theme);
+  });
+});
+
 // Expose functions globally for inline handlers
 window.toggleTask = toggleTask;
 window.deleteTask = deleteTask;
 
 // Initialize
 loadTasks();
+loadTheme();
