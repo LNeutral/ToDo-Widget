@@ -49,10 +49,11 @@ function createWindow() {
   });
 
   // Handle minimize
-  ipcMain.on('minimize-window', () => {
-    const bounds = mainWindow.getBounds();
-    store.set('windowBounds', bounds);
-  });
+ipcMain.on('minimize-window', () => {
+  const bounds = mainWindow.getBounds();
+  store.set('windowBounds', bounds);
+  mainWindow.minimize();
+});
 
   // Handle window close
   mainWindow.on('close', () => {
