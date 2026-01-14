@@ -92,6 +92,51 @@
       font-weight: 600;
     }
 
+    /* Context menu */
+    .context-menu {
+      position: fixed;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 2000;
+      display: none;
+      border: 1px solid #e5e7eb;
+    }
+
+    .context-menu.active {
+      display: block;
+    }
+
+    .context-menu button {
+      display: block;
+      width: 100%;
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+      color: #374151;
+      transition: all 0.2s;
+    }
+
+    .context-menu button:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .context-menu button:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .context-menu button:hover {
+      background: #f3f4f6;
+    }
+
+    .context-menu button.delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
     /* Theme colors */
     body[data-theme="mischka"] .tab {
       background: #d7d6de;
@@ -570,6 +615,11 @@
     <div class="footer">
       <p id="taskCounter">0 of 0 tasks remaining</p>
     </div>
+  </div>
+
+  <!-- Context menu for list options -->
+  <div class="context-menu" id="contextMenu">
+    <button id="deleteListBtn" class="delete">Delete List</button>
   </div>
 
   <script src="renderer.js"></script>

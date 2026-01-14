@@ -21,6 +21,10 @@ const listNameModal = document.getElementById('listNameModal');
 const listNameInput = document.getElementById('listNameInput');
 const confirmBtn = document.getElementById('confirmBtn');
 const cancelBtn = document.getElementById('cancelBtn');
+const contextMenu = document.getElementById('contextMenu');
+const deleteListBtn = document.getElementById('deleteListBtn');
+
+let currentContextListId = null;
 
 // Normalize stored tasks to an array for backward compatibility.
 function normalizeTasks(stored) {
@@ -128,8 +132,19 @@ function closeListModal() {
 function createTabButton(listId, listName) {
   const tab = document.createElement('button');
   tab.className = 'tab';
+  if (listId === 'personal') {
+    tab.classList.add('personal');
+  }
   tab.dataset.listId = listId;
   tab.textContent = listName;
+  
+  // Add right-click context menu for non-personal lists
+  if (listId !== 'personal') {
+    tab.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      showContextMenu(e, listId);
+    });
+  }
   
   // Insert before the add button
   tabsContainer.insertBefore(tab, addListBtn);
@@ -147,6 +162,41 @@ function switchList(listId) {
   
   renderTasks();
   saveTasks();
+}
+
+// Delete a task list
+function deleteList(listId) {
+  if (listId === 'personal') return; // Don't allow deleting personal list
+  
+  delete taskLists[listId];
+  delete listNames[listId];
+  
+  // Remove the tab from DOM
+  const tabToRemove = document.querySelector(`[data-list-id="${listId}"]`);
+  if (tabToRemove) {
+    tabToRemove.remove();
+  }
+  
+  // If we deleted the active list, switch to personal
+  if (activeListId === listId) {
+    switchList('personal');
+  } else {
+    saveTasks();
+  }
+}
+
+// Show context menu
+function showContextMenu(e, listId) {
+  currentContextListId = listId;
+  contextMenu.classList.add('active');
+  contextMenu.style.left = e.clientX + 'px';
+  contextMenu.style.top = e.clientY + 'px';
+}
+
+// Hide context menu
+function hideContextMenu() {
+  contextMenu.classList.remove('active');
+  currentContextListId = null;
 }
 
 // Add task
@@ -245,6 +295,19 @@ tabsContainer.addEventListener('click', (e) => {
     const listId = e.target.dataset.listId;
     switchList(listId);
   }
+});
+
+// Context menu event listeners
+deleteListBtn.addEventListener('click', () => {
+  if (currentContextListId) {
+    deleteList(currentContextListId);
+    hideContextMenu();
+  }
+});
+
+// Close context menu when clicking elsewhere
+document.addEventListener('click', () => {
+  hideContextMenu();
 });
 taskInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addTask();
