@@ -12,9 +12,26 @@ const minimizedText = document.getElementById('minimizedText');
 const settingsBtn = document.getElementById('settingsBtn');
 const themeSelector = document.getElementById('themeSelector');
 
+// Normalize stored tasks to an array for backward compatibility.
+function normalizeTasks(stored) {
+  if (Array.isArray(stored)) return stored;
+  if (stored && typeof stored === 'object') {
+    if (Array.isArray(stored.tasks)) return stored.tasks;
+    if (stored.tasksByList && typeof stored.tasksByList === 'object') {
+      if (stored.activeListId && Array.isArray(stored.tasksByList[stored.activeListId])) {
+        return stored.tasksByList[stored.activeListId];
+      }
+      const firstList = Object.values(stored.tasksByList).find(Array.isArray);
+      if (firstList) return firstList;
+    }
+  }
+  return [];
+}
+
 // Load tasks and theme from storage
 async function loadTasks() {
-  tasks = await window.electron.getTasks();
+  const stored = await window.electron.getTasks();
+  tasks = normalizeTasks(stored);
   renderTasks();
 }
 
