@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld('electron', {
   saveTasks: (tasks) => ipcRenderer.invoke('save-tasks', tasks),
   getTheme: () => ipcRenderer.invoke('get-theme'),
   saveTheme: (theme) => ipcRenderer.invoke('save-theme', theme),
-  minimizeWindow: () => ipcRenderer.send('minimize-window')
+  minimizeWindow: () => ipcRenderer.send('minimize-window'),
+  toggleAutoLaunch: (enabled) => ipcRenderer.invoke('toggle-auto-launch', enabled),
+  getAutoLaunchStatus: () => ipcRenderer.invoke('get-auto-launch-status')
 });

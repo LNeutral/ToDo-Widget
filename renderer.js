@@ -80,6 +80,15 @@ async function loadTheme() {
   applyTheme(currentTheme);
 }
 
+// Load auto-launch status
+async function loadAutoLaunchStatus() {
+  const autoLaunchCheckbox = document.getElementById('autoLaunchCheckbox');
+  if (autoLaunchCheckbox) {
+    const isEnabled = await window.electron.getAutoLaunchStatus();
+    autoLaunchCheckbox.checked = isEnabled;
+  }
+}
+
 // Apply theme
 function applyTheme(theme) {
   currentTheme = theme;
@@ -341,6 +350,18 @@ document.querySelectorAll('.theme-option').forEach(option => {
   });
 });
 
+// Auto-launch toggle
+const autoLaunchCheckbox = document.getElementById('autoLaunchCheckbox');
+if (autoLaunchCheckbox) {
+  autoLaunchCheckbox.addEventListener('change', async (e) => {
+    const success = await window.electron.toggleAutoLaunch(e.target.checked);
+    if (!success) {
+      e.target.checked = !e.target.checked;
+      console.error('Failed to toggle auto-launch');
+    }
+  });
+}
+
 // Expose functions globally for inline handlers
 window.toggleTask = toggleTask;
 window.deleteTask = deleteTask;
@@ -348,3 +369,4 @@ window.deleteTask = deleteTask;
 // Initialize
 loadTasks();
 loadTheme();
+loadAutoLaunchStatus();

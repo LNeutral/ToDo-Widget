@@ -5,17 +5,17 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "set WIN_SKIP_SIGNING=true && electron-builder"
   },
   "build": {
     "appId": "com.todowidget.app",
     "productName": "Todo Widget",
-    "win": {
-      "target": "nsis",
-      "icon": "icon.ico"
+    "directories": {
+      "buildResources": "assets"
     }
   },
   "dependencies": {
+    "auto-launch": "^5.0.6",
     "electron-store": "^8.1.0"
   },
   "devDependencies": {

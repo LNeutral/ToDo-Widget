@@ -1,9 +1,20 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
+const AutoLaunch = require('auto-launch');
 
 const store = new Store();
 let mainWindow;
+
+// Initialize auto-launch
+let autoLauncher;
+
+function initializeAutoLauncher() {
+  autoLauncher = new AutoLaunch({
+    name: 'Todo Widget',
+    path: app.getPath('exe'),
+  });
+}
 
 function createWindow() {
   // Get saved position or use defaults
@@ -81,7 +92,33 @@ ipcMain.handle('save-theme', (event, theme) => {
   return true;
 });
 
+ipcMain.handle('toggle-auto-launch', async (event, enabled) => {
+  try {
+    if (enabled) {
+      await autoLauncher.enable();
+    } else {
+      await autoLauncher.disable();
+    }
+    store.set('autoLaunchEnabled', enabled);
+    return true;
+  } catch (err) {
+    console.error('Error toggling auto-launch:', err);
+    return false;
+  }
+});
+
+ipcMain.handle('get-auto-launch-status', async () => {
+  try {
+    const enabled = await autoLauncher.isEnabled();
+    return enabled;
+  } catch (err) {
+    console.error('Error getting auto-launch status:', err);
+    return store.get('autoLaunchEnabled', false);
+  }
+});
+
 app.whenReady().then(() => {
+  initializeAutoLauncher();
   createWindow();
 
   app.on('activate', () => {
