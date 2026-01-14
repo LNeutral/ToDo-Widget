@@ -38,13 +38,18 @@ npm --version
    ```bash
    npm install
    ```
-
+https://github.com/LNeutral/ToDo-Widget/blob/main/README.md
 ## › Usage ⭑.ᐟ
 
-Start the application:
+Run in Development Mode:
 ```bash
 npm start
 ```
+Build Windows installer
+```bash
+npm run build
+```
+- The installer will be created in the **dist/** directory.
 
 ## ⚙️ Project Structure
 
