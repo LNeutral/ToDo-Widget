@@ -1,6 +1,10 @@
 let tasks = [];
 let isMinimized = false;
 let currentTheme = 'mischka';
+let taskLists = { personal: [] };
+let listNames = { personal: 'Personal' };
+let activeListId = 'personal';
+let listCounter = 1;
 
 const widget = document.getElementById('widget');
 const taskInput = document.getElementById('taskInput');
@@ -11,6 +15,12 @@ const minimizeBtn = document.getElementById('minimizeBtn');
 const minimizedText = document.getElementById('minimizedText');
 const settingsBtn = document.getElementById('settingsBtn');
 const themeSelector = document.getElementById('themeSelector');
+const addListBtn = document.getElementById('addListBtn');
+const tabsContainer = document.getElementById('tabsContainer');
+const listNameModal = document.getElementById('listNameModal');
+const listNameInput = document.getElementById('listNameInput');
+const confirmBtn = document.getElementById('confirmBtn');
+const cancelBtn = document.getElementById('cancelBtn');
 
 // Normalize stored tasks to an array for backward compatibility.
 function normalizeTasks(stored) {
@@ -31,8 +41,34 @@ function normalizeTasks(stored) {
 // Load tasks and theme from storage
 async function loadTasks() {
   const stored = await window.electron.getTasks();
-  tasks = normalizeTasks(stored);
-  renderTasks();
+  
+  if (stored && typeof stored === 'object' && stored.taskLists) {
+    taskLists = stored.taskLists;
+    listNames = stored.listNames || { personal: 'Personal' };
+    activeListId = stored.activeListId || 'personal';
+    
+    // Find the highest counter from existing lists
+    Object.keys(taskLists).forEach(listId => {
+      if (listId.startsWith('list-')) {
+        const num = parseInt(listId.replace('list-', ''));
+        listCounter = Math.max(listCounter, num);
+      }
+    });
+  } else {
+    // Backward compatibility
+    taskLists = { personal: normalizeTasks(stored) };
+    listNames = { personal: 'Personal' };
+  }
+  
+  // Create tabs for each list
+  Object.entries(taskLists).forEach(([listId, _]) => {
+    if (listId !== 'personal') {
+      const listName = listNames[listId] || listId.replace('list-', 'List ');
+      createTabButton(listId, listName);
+    }
+  });
+  
+  switchList(activeListId);
 }
 
 async function loadTheme() {
@@ -60,7 +96,57 @@ async function changeTheme(theme) {
 
 // Save tasks to storage
 async function saveTasks() {
-  await window.electron.saveTasks(tasks);
+  await window.electron.saveTasks({ taskLists, listNames, activeListId });
+}
+
+// Add new task list
+function addNewList() {
+  listNameInput.value = '';
+  listNameModal.classList.add('active');
+  listNameInput.focus();
+}
+
+// Create list from modal input
+function createListFromModal() {
+  const listName = listNameInput.value.trim();
+  if (listName) {
+    listCounter++;
+    const listId = `list-${listCounter}`;
+    taskLists[listId] = [];
+    listNames[listId] = listName;
+    createTabButton(listId, listName);
+    switchList(listId);
+    saveTasks();
+    listNameModal.classList.remove('active');
+  }
+}
+
+// Close modal
+function closeListModal() {
+  listNameModal.classList.remove('active');
+}
+function createTabButton(listId, listName) {
+  const tab = document.createElement('button');
+  tab.className = 'tab';
+  tab.dataset.listId = listId;
+  tab.textContent = listName;
+  
+  // Insert before the add button
+  tabsContainer.insertBefore(tab, addListBtn);
+}
+
+// Switch active task list
+function switchList(listId) {
+  activeListId = listId;
+  tasks = taskLists[listId] || [];
+  
+  // Update active tab styling
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.listId === listId);
+  });
+  
+  renderTasks();
+  saveTasks();
 }
 
 // Add task
@@ -138,7 +224,28 @@ function toggleMinimize() {
 }
 
 // Event listeners
+console.log('addListBtn:', addListBtn);
+console.log('tabsContainer:', tabsContainer);
 addBtn.addEventListener('click', addTask);
+if (addListBtn) {
+  addListBtn.addEventListener('click', () => {
+    console.log('Add list button clicked!');
+    addNewList();
+  });
+}
+confirmBtn.addEventListener('click', createListFromModal);
+cancelBtn.addEventListener('click', closeListModal);
+listNameInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') createListFromModal();
+});
+
+// Tab switching with event delegation
+tabsContainer.addEventListener('click', (e) => {
+  if (e.target.classList.contains('tab')) {
+    const listId = e.target.dataset.listId;
+    switchList(listId);
+  }
+});
 taskInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addTask();
 });

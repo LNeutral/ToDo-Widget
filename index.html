@@ -84,6 +84,12 @@
       border: none;
       cursor: pointer;
       transition: all 0.2s;
+      opacity: 0.6;
+    }
+
+    .tab.active {
+      opacity: 1;
+      font-weight: 600;
     }
 
     /* Theme colors */
@@ -393,6 +399,89 @@
     .theme-silver { background: #c4c6b9; }
     .theme-bonjour { background: #e4e0e1; }
 
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      min-width: 300px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .modal-content h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 16px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .modal-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-btn.cancel {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .modal-btn.cancel:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-btn.confirm {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .modal-btn.confirm:hover {
+      background: #2563eb;
+    }
+
     svg {
       width: 20px;
       height: 20px;
@@ -435,10 +524,22 @@
       <button class="theme-option theme-bonjour" data-theme="bonjour" title="Bon Jour"></button>
     </div>
 
+    <!-- List name modal -->
+    <div class="modal" id="listNameModal">
+      <div class="modal-content">
+        <h2>New Task List</h2>
+        <input type="text" id="listNameInput" placeholder="Enter list name..." class="modal-input">
+        <div class="modal-buttons">
+          <button id="cancelBtn" class="modal-btn cancel">Cancel</button>
+          <button id="confirmBtn" class="modal-btn confirm">Create</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab">Personal</button>
-      <button class="icon-btn">
+    <div class="tabs" id="tabsContainer">
+      <button class="tab active" data-list-id="personal">Personal</button>
+      <button class="icon-btn" id="addListBtn" title="Add new list">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
