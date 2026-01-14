@@ -1,9 +1,9 @@
-# To-Do Widget (Electron Desktop App)
+# To-Do Widget (Electron Desktop App) ⊹ ࣪ ˖
 
 A **to-do list widget for Windows** built with **Electron, HTML, CSS, and JavaScript**.  
 Designed to stay visible while you work, with a clean, non-distracting UI.
 
-## Features
+## ⤷ Features
 
 - Widget-style window (small, focused, non-intrusive)
 - Add and manage tasks quickly
@@ -12,12 +12,12 @@ Designed to stay visible while you work, with a clean, non-distracting UI.
 - Saves tasks locally
 - Cross-platform via Electron (Windows-focused)
 - Auto-Start on Windows
+- 5 beautiful colors to choose from
 
 ## Demo ⋆˙⟡
 
-![App Demo](./demo.gif)
 
-
+<img src="https://github.com/user-attachments/assets/0e3ef4e4-3c6b-4647-be77-4db765fabfdc" width="400" height="300" alt="App Demo">
 
 ## ⤷ Prerequisites
 
@@ -46,7 +46,7 @@ Start the application:
 npm start
 ```
 
-## Project Structure
+## ⚙️ Project Structure
 
 - `index.html` - Main application UI
 - `main.js` - Electron main process
