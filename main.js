@@ -6,6 +6,21 @@ const AutoLaunch = require('auto-launch');
 const store = new Store();
 let mainWindow;
 
+// Single instance lock to prevent multiple windows
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // If a second instance tries to launch, focus the existing window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
+
 // Initialize auto-launch
 let autoLauncher;
 

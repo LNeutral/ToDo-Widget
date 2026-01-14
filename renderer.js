@@ -327,6 +327,9 @@ taskInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addTask();
 });
 minimizeBtn.addEventListener('click', toggleMinimize);
+document.getElementById('closeBtn').addEventListener('click', () => {
+  window.close();
+});
 widget.addEventListener('click', () => {
   if (isMinimized) toggleMinimize();
 });

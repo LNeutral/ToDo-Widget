@@ -67,6 +67,27 @@ body {
   display: flex;
   gap: 8px;
   align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  scroll-behavior: smooth;
+}
+
+.tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.tabs::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .tab {
@@ -78,7 +99,10 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   opacity: 0.6;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
+
 
 .tab.active {
   opacity: 1;
@@ -438,9 +462,9 @@ body[data-theme="bonjour"] .add-btn:hover {
   font-weight: bold;
 }
 
-.theme-mischka { background: #d7d6de; }
+.theme-mischka { background: #d4c7d9; }
 .theme-silk { background: #c0afaa; }
-.theme-vanilla { background: #efd9d6; }
+.theme-vanilla { background: #e4c5c2; }
 .theme-silver { background: #c4c6b9; }
 .theme-bonjour { background: #e4e0e1; }
 
