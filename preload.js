@@ -1,3 +1,4 @@
+// Preload script exposing a safe IPC API from Electron to the renderer.
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {

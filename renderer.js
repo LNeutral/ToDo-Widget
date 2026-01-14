@@ -1,3 +1,4 @@
+// Renderer-side logic for task lists, theming, and UI interactions in the widget.
 let tasks = [];
 let isMinimized = false;
 let currentTheme = 'mischka';

@@ -1,3 +1,5 @@
+// Electron main process entry that creates the window and handles IPC/storage/auto-launch wiring.
+
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
@@ -6,13 +8,14 @@ const AutoLaunch = require('auto-launch');
 const store = new Store();
 let mainWindow;
 
-// Single instance lock to prevent multiple windows
+// single instance lock to prevent multiple windows
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', () => {
+
     // If a second instance tries to launch, focus the existing window
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
