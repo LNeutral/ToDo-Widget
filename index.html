@@ -173,9 +173,10 @@
       align-items: center;
       background: #f9fafb;
       border-radius: 12px;
-      padding: 12px;
+      padding: 8px;
       border: 1px solid #e5e7eb;
       width: 100%;
+      box-sizing: border-box;
     }
 
     .task-input {
@@ -185,6 +186,8 @@
       outline: none;
       font-size: 14px;
       color: #4b5563;
+      min-width: 0;
+      padding: 4px;
     }
 
     .task-input::placeholder {
@@ -194,12 +197,15 @@
     .add-btn {
       border: none;
       border-radius: 8px;
-      padding: 6px;
+      padding: 6px 10px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
     }
 
     body[data-theme="mischka"] .add-btn {
