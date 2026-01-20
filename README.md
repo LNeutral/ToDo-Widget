@@ -5,14 +5,13 @@ Designed for adhders that struggle with object permanence as it stays pinned to 
 
 ## ⤷ Features
 
-- Widget-style window (small, focused, non-intrusive)
+- Widget-style window 
 - Add and manage tasks quickly
-- Simple and intuitive user interface
-- Fast and lightweight
+- Non-distracting user interface
 - Saves tasks locally
-- Cross-platform via Electron (Windows-focused)
+- Cross-platform via Electron (Windows-focused, haven't tested on Mac yet)
 - Auto-Start on Windows
-- 5 beautiful colors to choose from
+- 5 accent colors to choose from
 
 ## Demo ⋆˙⟡
 
