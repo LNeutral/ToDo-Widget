@@ -1,7 +1,7 @@
 # To-Do Widget (Electron Desktop App) ⊹ ࣪ ˖
 
 A **to-do list widget for Windows** built with **Electron, HTML, CSS, and JavaScript**.  
-Designed to stay visible while you work, with a clean, non-distracting UI.
+Designed for adhders that struggle with object permanence as it stays pinned to the top of your desktop.
 
 ## ⤷ Features
 
